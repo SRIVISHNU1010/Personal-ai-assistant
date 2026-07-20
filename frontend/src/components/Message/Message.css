@@ -1,29 +1,64 @@
-.message{
-    display:flex;
-    margin:15px;
+.message-row {
+  width: 100%;
+  padding: 16px 0;
 }
 
-.message.user{
-    justify-content:flex-end;
+.message-row.user {
+  background: #2a2a2a;
 }
 
-.message.bot{
-    justify-content:flex-start;
+.message-row.bot {
+  background: transparent;
 }
 
-.bubble{
-    max-width:70%;
-    padding:15px;
-    border-radius:15px;
-    font-size:16px;
+.message-inner {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
 }
 
-.user .bubble{
-    background:#19c37d;
-    color:white;
+.message-row.user .message-inner {
+  flex-direction: row-reverse;
 }
 
-.bot .bubble{
-    background:#2f2f2f;
-    color:white;
+.message-avatar {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.message-row.bot .message-avatar {
+  background: #19c37d;
+}
+
+.message-row.user .message-avatar {
+  background: #5c5c5f;
+}
+
+.message-text {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  color: #ececec;
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.message-row.bot .message-text {
+  background: #2f2f2f;
+}
+
+.message-row.user .message-text {
+  background: #19c37d;
 }

@@ -6,11 +6,8 @@ import ChatWindow from "./components/Chat/ChatWindow";
 function App() {
   return (
     <div className="app">
-
       <Sidebar />
-
       <ChatWindow />
-
     </div>
   );
 }
