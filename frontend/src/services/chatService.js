@@ -6,9 +6,7 @@ export async function sendChatMessage(message) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      message,
-    }),
+    body: JSON.stringify({ message }),
   });
 
   if (!response.ok) {
