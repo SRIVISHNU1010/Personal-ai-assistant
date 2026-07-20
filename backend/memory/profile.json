@@ -1,0 +1,21 @@
+{
+  "name": "Sri Vishnu Krishnakumar",
+  "role": "Generative AI Engineer",
+  "total_experience": "5 years",
+  "relevant_experience": "3+ years in Generative AI",
+  "current_company": "Hotfoot Technology Solutions",
+  "current_location": "Chennai",
+  "current_ctc": "13 LPA",
+  "skills": [
+    "Python",
+    "FastAPI",
+    "LangChain",
+    "LlamaIndex",
+    "RAG",
+    "FAISS",
+    "Pinecone",
+    "AWS Bedrock",
+    "OpenAI",
+    "Groq"
+  ]
+}

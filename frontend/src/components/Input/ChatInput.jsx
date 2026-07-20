@@ -1,38 +1,46 @@
-import "./ChatInput.css";
 import { useState } from "react";
 
-function ChatInput({ onSend }) {
+import "./ChatInput.css";
+
+function ChatInput({ onSend, disabled = false }) {
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
-    if (input.trim() === "") return;
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    onSend(input);
+    const trimmedInput = input.trim();
+
+    if (!trimmedInput || disabled) {
+      return;
+    }
+
+    onSend(trimmedInput);
     setInput("");
   };
 
   return (
-    <div className="chat-input-container">
+    <form
+      className="chat-input-container"
+      onSubmit={handleSubmit}
+    >
       <input
         type="text"
-        placeholder="Type your message..."
         className="chat-input"
+        placeholder="Ask something about me..."
         value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSend();
-          }
-        }}
+        disabled={disabled}
+        onChange={(event) => setInput(event.target.value)}
       />
 
       <button
+        type="submit"
         className="send-btn"
-        onClick={handleSend}
+        disabled={disabled || !input.trim()}
+        aria-label="Send message"
       >
         ➤
       </button>
-    </div>
+    </form>
   );
 }
 
