@@ -6,6 +6,7 @@
   "current_company": "Hotfoot Technology Solutions",
   "current_location": "Chennai",
   "current_ctc": "13 LPA",
+  "expected_ctc": "24 LPA",
   "skills": [
     "Python",
     "FastAPI",

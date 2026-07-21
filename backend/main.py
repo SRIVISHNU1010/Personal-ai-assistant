@@ -62,6 +62,13 @@ def chat(request: ChatRequest):
 
     if not question:
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
+    
+    greetings = ["hi", "hello", "hey", "how are you", "hii", "hlo"]
+
+    if any(greeting in question for greeting in greetings):
+        return {
+        "reply": "👋 Welcome to VK's AI Assistant! How can I help you today?"
+    }
 
     if "who am i" in question or "about me" in question:
         return {
@@ -80,6 +87,11 @@ def chat(request: ChatRequest):
     if "current ctc" in question or "salary" in question:
         return {
             "reply": f"Your current CTC is {profile['current_ctc']}."
+        }
+    
+    if "expected ctc" in question or "expected salary" in question:
+        return {
+            "reply": f"Your expected CTC is {profile['expected_ctc']}."
         }
 
     if "location" in question or "where do i live" in question:

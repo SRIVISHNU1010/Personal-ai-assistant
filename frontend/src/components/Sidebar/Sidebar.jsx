@@ -4,7 +4,7 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="logo">
-        🤖 <span>Nexus AI</span>
+        🤖 <span>Vishnu.AI</span>
       </div>
 
       <button className="new-chat">
