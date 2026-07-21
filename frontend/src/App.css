@@ -625,8 +625,11 @@ input {
     position: relative;
     z-index: 30;
     width: 100%;
-    padding: 8px 8px 10px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+
+    /* Extra bottom space moves the chat form slightly upward on mobile */
+    padding: 8px 8px 25px;
+    padding-bottom: calc(25px + env(safe-area-inset-bottom));
+
     background: #212121;
     pointer-events: auto;
   }
@@ -755,8 +758,9 @@ input {
   }
 
   .composer-wrap {
-    padding: 6px 6px 8px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    /* Keep the input comfortably above the bottom edge on small phones */
+    padding: 6px 6px 22px;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
   }
 
   .chat-form {
