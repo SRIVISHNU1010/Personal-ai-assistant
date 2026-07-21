@@ -84,7 +84,7 @@ def chat(request: ChatRequest):
             "reply": f"You currently work at {profile['current_company']}."
         }
 
-    if "current ctc" in question or "salary" in question:
+    if "current ctc" in question or "current salary" in question:
         return {
             "reply": f"Your current CTC is {profile['current_ctc']}."
         }
