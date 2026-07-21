@@ -9,7 +9,7 @@ import { sendChatMessage } from "../../services/chatService";
 function ChatWindow() {
   const [messages, setMessages] = useState([
     {
-      text: "Hello Vishnu! Ask me something about your stored profile.",
+      text: "Welcome back, Vishnu! 👋 I’ve got your world in context. What can I help you with today?",
       sender: "bot",
     },
   ]);

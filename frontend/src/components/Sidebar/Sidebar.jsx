@@ -1,10 +1,14 @@
 import "./Sidebar.css";
 
-function Sidebar({ onNewChat }) {
+function Sidebar({
+  onNewChat,
+  activePage,
+  onNavigate,
+}) {
   return (
     <div className="sidebar">
       <div className="logo">
-        Personal AI
+        🤖 Dragon.AI
       </div>
 
       <button
@@ -15,16 +19,22 @@ function Sidebar({ onNewChat }) {
       </button>
 
       <div className="chat-history">
-        <div className="chat-item active">
-          Current Chat
+        <div
+          className={`chat-item ${
+            activePage === "chat" ? "active" : ""
+          }`}
+          onClick={() => onNavigate("chat")}
+        >
+          💬 Current Chat
         </div>
 
-        <div className="chat-item">
-          Resume
-        </div>
-
-        <div className="chat-item">
-          Interview Prep
+        <div
+          className={`chat-item ${
+            activePage === "resume" ? "active" : ""
+          }`}
+          onClick={() => onNavigate("resume")}
+        >
+          📄 Resume
         </div>
       </div>
 
