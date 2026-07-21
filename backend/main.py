@@ -1,9 +1,14 @@
 import json
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from groq import Groq
 from pydantic import BaseModel
+
+load_dotenv()
 
 app = FastAPI(title="Vishnu AI Backend")
 
@@ -24,20 +29,35 @@ app.add_middleware(
 BASE_DIR = Path(__file__).resolve().parent
 PROFILE_FILE = BASE_DIR / "memory" / "profile.json"
 
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+if not GROQ_API_KEY:
+    raise RuntimeError("GROQ_API_KEY is missing from the .env file.")
+
+client = Groq(api_key=GROQ_API_KEY)
+
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
 
 class ChatRequest(BaseModel):
     message: str
+    history: list[ChatMessage] = []
 
 
 def load_profile() -> dict:
     try:
         with PROFILE_FILE.open("r", encoding="utf-8") as file:
             return json.load(file)
+
     except FileNotFoundError as exc:
         raise HTTPException(
             status_code=500,
             detail="profile.json was not found."
         ) from exc
+
     except json.JSONDecodeError as exc:
         raise HTTPException(
             status_code=500,
@@ -47,7 +67,9 @@ def load_profile() -> dict:
 
 @app.get("/")
 def home():
-    return {"message": "Vishnu AI Backend is running"}
+    return {
+        "message": "Vishnu AI Backend is running"
+    }
 
 
 @app.get("/profile")
@@ -57,54 +79,84 @@ def get_profile():
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    profile = load_profile()
-    question = request.message.strip().lower()
+    question = request.message.strip()
 
     if not question:
-        raise HTTPException(status_code=400, detail="Message cannot be empty.")
-    
-    greetings = ["hi", "hello", "hey", "how are you", "hii", "hlo"]
-
-    if any(greeting in question for greeting in greetings):
-        return {
-        "reply": "👋 Welcome to VK's AI Assistant! How can I help you today?"
-    }
-
-    if "who am i" in question or "about me" in question:
-        return {
-            "reply": (
-                f"You are {profile['name']}, a {profile['role']} with "
-                f"{profile['total_experience']} of total experience and "
-                f"{profile['relevant_experience']}."
-            )
-        }
-
-    if "current company" in question or "where do i work" in question:
-        return {
-            "reply": f"You currently work at {profile['current_company']}."
-        }
-
-    if "current ctc" in question or "current salary" in question:
-        return {
-            "reply": f"Your current CTC is {profile['current_ctc']}."
-        }
-    
-    if "expected ctc" in question or "expected salary" in question:
-        return {
-            "reply": f"Your expected CTC is {profile['expected_ctc']}."
-        }
-
-    if "location" in question or "where do i live" in question:
-        return {
-            "reply": f"Your current location is {profile['current_location']}."
-        }
-
-    if "skills" in question:
-        skills = ", ".join(profile["skills"])
-        return {"reply": f"Your listed skills are: {skills}."}
-
-    return {
-        "reply": (
-            "I could not find that information in your stored profile yet."
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty."
         )
-    }
+
+    profile = load_profile()
+
+    profile_context = json.dumps(
+        profile,
+        indent=2,
+        ensure_ascii=False
+    )
+
+    system_prompt = f"""
+You are VK's Personal AI Assistant.
+
+You help Vishnu with personal, professional, technical,
+career, and interview-related questions.
+
+Here is Vishnu's stored profile:
+
+{profile_context}
+
+Instructions:
+
+1. When the user asks about Vishnu, use the stored profile.
+2. Never invent personal information that is not in the profile.
+3. If personal information is missing, say it is not stored yet.
+4. You can answer general technical and educational questions using your knowledge.
+5. Keep responses clear, friendly, and professional.
+6. For greetings, greet the user naturally as VK's AI Assistant.
+7. When discussing Vishnu's career, tailor your response to his profile.
+"""
+    
+    messages = [
+        {
+            "role": "system",
+            "content": system_prompt
+        }
+    ]
+
+    for item in request.history:
+        if item.role in ["user", "assistant"]:
+            messages.append(
+                {
+                    "role": item.role,
+                    "content": item.content
+                }
+            )
+
+    messages.append(
+        {
+            "role": "user",
+            "content": question
+        }
+    )
+
+    try:
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.4,
+            max_tokens=700
+        )
+
+        reply = completion.choices[0].message.content
+
+        return {
+            "reply": reply
+        }
+
+    except Exception as exc:
+        print("Groq API Error:", exc)
+
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to generate AI response."
+        ) from exc

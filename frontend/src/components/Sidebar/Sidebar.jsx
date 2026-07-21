@@ -1,27 +1,41 @@
 import "./Sidebar.css";
 
-function Sidebar() {
+function Sidebar({ onNewChat }) {
   return (
-    <aside className="sidebar">
+    <div className="sidebar">
       <div className="logo">
-        🤖 <span>Vishnu.AI</span>
+        Personal AI
       </div>
 
-      <button className="new-chat">
+      <button
+        className="new-chat"
+        onClick={onNewChat}
+      >
         + New Chat
       </button>
 
       <div className="chat-history">
-        <div className="chat-item active">💬 Current Chat</div>
-        <div className="chat-item">📄 Resume</div>
-        <div className="chat-item">🎯 Interview Prep</div>
+        <div className="chat-item active">
+          Current Chat
+        </div>
+
+        <div className="chat-item">
+          Resume
+        </div>
+
+        <div className="chat-item">
+          Interview Prep
+        </div>
       </div>
 
       <div className="sidebar-footer">
-        <div className="avatar">V</div>
+        <div className="avatar">
+          V
+        </div>
+
         <span>Vishnu</span>
       </div>
-    </aside>
+    </div>
   );
 }
 

@@ -17,11 +17,24 @@ function ChatWindow() {
   const [isTyping, setIsTyping] = useState(false);
 
   const handleSend = async (text) => {
+    const trimmedText = text.trim();
+
+    if (!trimmedText) {
+      return;
+    }
+
     const userMessage = {
-      text,
+      text: trimmedText,
       sender: "user",
     };
 
+    // Convert existing chat messages into LLM conversation history
+    const history = messages.map((message) => ({
+      role: message.sender === "user" ? "user" : "assistant",
+      content: message.text,
+    }));
+
+    // Show the user's new message immediately
     setMessages((previousMessages) => [
       ...previousMessages,
       userMessage,
@@ -30,7 +43,11 @@ function ChatWindow() {
     setIsTyping(true);
 
     try {
-      const data = await sendChatMessage(text);
+      // Send current message + previous conversation history
+      const data = await sendChatMessage(
+        trimmedText,
+        history
+      );
 
       const botMessage = {
         text: data.reply,
@@ -42,6 +59,8 @@ function ChatWindow() {
         botMessage,
       ]);
     } catch (error) {
+      console.error("Chat error:", error);
+
       const errorMessage = {
         text: `Sorry, I couldn't connect to the backend. ${error.message}`,
         sender: "bot",
