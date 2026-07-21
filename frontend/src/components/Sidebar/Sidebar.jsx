@@ -27,15 +27,6 @@ function Sidebar({
         >
           💬 Current Chat
         </div>
-
-        <div
-          className={`chat-item ${
-            activePage === "resume" ? "active" : ""
-          }`}
-          onClick={() => onNavigate("resume")}
-        >
-          📄 Resume
-        </div>
       </div>
 
       <div className="sidebar-footer">
